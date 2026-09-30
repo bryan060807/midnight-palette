@@ -1,0 +1,129 @@
+/* The Midnight Palette: charcoal, aged brass, warm paper. Artwork is never filtered. */
+:root{--ink:#2d302a;--muted:#686052;--green:#765a29;--lime:#eedcad;--bg:#f3eee4;--line:#d9cfbb;--surface:#fffcf5;--checked-surface:#eee2ca;--mp-panel:#e9e0cf;--mp-gold:#785a27;--mp-soft:#8b744a;--mp-primary:#765a29;--mp-on-primary:#fffaf0;--mp-shadow:0 12px 35px #30200c12}
+:root[data-theme=dark]{color-scheme:dark;--ink:#f0e8d9;--muted:#c5bba9;--green:#cfb984;--lime:#eddbab;--bg:#101617;--line:#3d443e;--surface:#192122;--checked-surface:#303329;--mp-panel:#222b2a;--mp-gold:#ddc594;--mp-soft:#b8a27b;--mp-primary:#c6ac76;--mp-on-primary:#141b1b;--mp-shadow:0 16px 42px #0004}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--ink)}
+h1,h2,h3,.arttitle,.brand,.current-step h3,.featured-copy h2,.studio-heading h1{font-family:Georgia,'Times New Roman',serif;letter-spacing:-.02em}
+:where(.sidebar,.topbar,.studio-topbar,.studio-side,.mobilebar,.studio-mobile,dialog,.board,.pin,.artcard,.btn,.iconbtn,.field,.search,.ai-project-card,.medium-tabs,.lesson-tabs,.step-outline){background:var(--surface);color:var(--ink);border-color:var(--line)}
+.midnight-brand.brand{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;padding:0;letter-spacing:0;line-height:1.1;color:var(--mp-gold);font-weight:normal}
+.midnight-emblem{width:62px;height:62px;object-fit:contain;flex-shrink:0}
+.midnight-wordmark{font:500 21px/1.07 Georgia,'Times New Roman',serif;text-transform:uppercase;letter-spacing:.035em}
+.midnight-wordmark small{display:block;font:400 11px/1.5 Georgia,'Times New Roman',serif;letter-spacing:.22em;color:var(--mp-soft)}
+.midnight-sidebar-tagline{font:italic 16px/1.5 Georgia,serif;color:var(--mp-soft)}
+.studio-workspace{margin:22px 0 28px}.studio-side{padding-top:26px}.studio-sidebar-note{border-color:var(--line)}
+.midnight-title-lockup{display:flex;align-items:center;gap:22px}.midnight-title-lockup>img{width:104px;height:104px;object-fit:contain;flex-shrink:0}
+.studio-heading .midnight-title-lockup h1{font-size:clamp(28px,3.4vw,45px);font-weight:500;text-transform:uppercase;letter-spacing:.025em;line-height:1.15;margin:0 0 10px;color:var(--mp-gold)}
+.studio-heading .midnight-tagline{font:400 clamp(18px,2vw,24px)/1.4 Georgia,serif;color:var(--mp-soft);margin:0}
+.studio-heading{padding:6px 0 25px;border-bottom:1px solid var(--line);margin-bottom:24px}.studio-kicker,.eyebrow,.feature-label,.navlabel{color:var(--mp-soft)}
+.featured-art{background:var(--mp-panel);border-color:var(--line);box-shadow:var(--mp-shadow);border-radius:12px}
+.featured-copy h2{font-weight:500;line-height:1.15;color:var(--ink)}.featured-copy h2 em{color:var(--mp-gold)}
+.artcard,.board,.pin{border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 15px #0000000a;background:var(--surface)}
+.arttitle,.current-step h3,.lesson-intro h3,.library-heading h2{color:var(--ink)}.arttitle{font-size:22px;font-weight:500}.artcardbody p,.artmeta,.studio-heading p,.featured-copy p,.featurefacts{color:var(--muted)}
+.btn{border-radius:7px;background:var(--surface);color:var(--ink);border-color:var(--line);font-family:'Segoe UI',Arial,sans-serif}
+.btn.primary,.feature-cta{background:var(--mp-primary);border-color:var(--mp-primary);color:var(--mp-on-primary)}
+:is(.navbtn.active,.studio-side .navbtn.active,.studio-side .medium-active,.medium-tabs button.active,.lesson-tabs button.active,.step-outline>button.active,.btn.soft,.resume-strip,.notice,.lesson-note,.lesson-bottom-note,.finish-care,.ai-disclosure,.ai-warning,.ai-check,.pinterest-repair-bar,.palette-names span,.lesson-pills span,.avatar,.pintags span,.transfer-tabs button.active){background:var(--checked-surface);color:var(--ink);border-color:var(--line)}
+:is(.navbtn,.studio-side .navbtn,.medium-tabs button,.artfilters select,.library-heading select,.step-outline>button){color:var(--muted)}
+.medium-tabs button.active,.lesson-tabs button.active,.transfer-tabs button.active{border-bottom-color:var(--mp-gold)}
+:is(.artfilters select,.library-heading select,.filedrop,.import-preview,.transfer-how,.visual-step,.compare-step,.zoom-hint){background:var(--surface);color:var(--ink);border-color:var(--line)}
+:is(.artcard .saveart,.mediumlabel,.artprogressbadge){background:var(--surface);color:var(--mp-gold)}
+:is(.artcard .saveart.saved,.favorite.on){background:var(--mp-primary);color:var(--mp-on-primary)}
+.large-materials input[type=checkbox],input[type=checkbox],.ai-body progress{accent-color:var(--mp-primary)}
+.large-materials label:has(input:checked){border-color:var(--mp-gold);background:var(--checked-surface)}
+:focus-visible{outline-color:var(--mp-gold)}.step-progress>div{background:var(--mp-primary)}.step-progress{background:var(--mp-panel)}
+/* Match the specificity of the previous dark-mode patch. */
+html[data-theme=dark] :is(.sidebar,.studio-side,.topbar,.studio-topbar,.mobilebar,.studio-mobile,dialog,.board,.pin,.artcard,.btn,.iconbtn,.search,.field,.ai-project-card,.artfilters select,.library-heading select,.medium-tabs,.lesson-tabs,.step-outline,.step-zoom,.transfer-card,.transfer-panel,.visual-step,.filedrop,.import-preview,.transfer-how,.compare-step,.zoom-hint){background:var(--surface);color:var(--ink);border-color:var(--line)}
+html[data-theme=dark] :is(.navbtn.active,.studio-side .navbtn.active,.studio-side .medium-active,.medium-tabs button.active,.lesson-tabs button.active,.step-outline>button.active,.btn.soft,.resume-strip,.notice,.lesson-note,.lesson-bottom-note,.finish-care,.ai-disclosure,.ai-warning,.ai-check,.pinterest-repair-bar,.palette-names span,.lesson-pills span,.avatar,.pintags span,.transfer-tabs button.active){background:var(--checked-surface);color:var(--ink);border-color:var(--line)}
+html[data-theme=dark] :is(.btn.primary,.feature-cta,.artcard .saveart.saved,.favorite.on){background:var(--mp-primary);border-color:var(--mp-primary);color:var(--mp-on-primary)}
+html[data-theme=dark] :is(.featured-art,.studio-sidebar-note,.step-progress,.imgfallback,.boardcover,.ai-stage,.drop-zone,.import-drop){background:var(--mp-panel);border-color:var(--line)}
+html[data-theme=dark] .studio-sidebar-note{background:transparent}
+html[data-theme=dark] :is(.navbtn,.studio-side .navbtn,.medium-tabs button,.artfilters select,.library-heading select,.step-outline>button){color:var(--muted)}
+html[data-theme=dark] :is(.featured-copy h2 em,.lesson-intro .lesson-note,.finish-care p,.finish-care strong,.step-outline>button.done,.midnight-brand.brand,.midnight-title-lockup h1){color:var(--mp-gold)}
+html[data-theme=dark] :is(input,textarea,select){background:var(--surface);color:var(--ink);border-color:var(--line)}
+html[data-theme=dark] :is(input,textarea)::placeholder{color:var(--muted)}
+html[data-theme=dark] :is(.artcard .saveart,.mediumlabel,.artprogressbadge){background:var(--mp-panel);color:var(--mp-gold);border-color:var(--line)}
+html[data-theme=dark] a:focus-visible,html[data-theme=dark] button:focus-visible{outline-color:var(--mp-gold)}
+.studiofooter{border-top:1px solid var(--line);padding-top:24px;gap:20px}.studiofooter .midnight-emblem{width:40px;height:40px}.studiofooter .midnight-wordmark{font-size:14px}.studiofooter .midnight-wordmark small{font-size:10px}.studiofooter>span:not(.brand){font:italic 17px Georgia,serif;color:var(--mp-soft)}
+@media(max-width:900px){.studio-topbar .mobilebrand{display:flex}.mobilebrand .midnight-emblem{width:44px;height:44px}.mobilebrand .midnight-wordmark{font-size:15px}.mobilebrand .midnight-wordmark small{font-size:10px}.midnight-title-lockup{gap:14px}.midnight-title-lockup>img{width:80px;height:80px}}
+@media(max-width:600px){.studio-content{padding-top:22px}.studio-heading{gap:8px;align-items:flex-start}.midnight-title-lockup{gap:12px;align-items:center}.midnight-title-lockup>img{width:62px;height:62px}.studio-heading .midnight-title-lockup h1{font-size:26px;letter-spacing:0}.studio-heading .midnight-tagline{font-size:18px}.studio-heading .surprise{margin-top:10px}.topright{justify-content:flex-end}.topright .avatar{display:none}.featured-copy{padding:24px}.studiofooter{flex-wrap:wrap}.large-materials label{border-radius:9px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Mobile reading layout: keep the artwork generous and the instructions legible. */
+@media(max-width:800px){
+ html{ -webkit-text-size-adjust:100%;text-size-adjust:100% }
+ body{font-size:16px;line-height:1.5}
+ .studio-content,.content{padding:24px 16px calc(110px + env(safe-area-inset-bottom))}
+ .studio-topbar,.topbar{padding:12px 16px;gap:12px;min-height:76px;height:auto;flex-wrap:wrap}
+ .studio-topbar .brand.mobilebrand{max-width:none;flex:1 1 160px}
+ .mobilebrand .midnight-wordmark{font-size:18px;line-height:1.15}
+ .mobilebrand .midnight-wordmark small{font-size:12px}
+ .mobilebrand .midnight-emblem{width:48px;height:48px}
+ .topright{gap:8px;min-width:0;flex-wrap:wrap}
+ .topright .saved,.studio-topbar .crumb{display:none}
+ .topright .btn,.btn,.feature-cta{font-size:16px;min-height:48px;white-space:normal;line-height:1.4}
+ .iconbtn,.saveart{min-width:44px;min-height:44px}
+ .studio-heading{flex-wrap:wrap;gap:16px}
+ .midnight-title-lockup{min-width:0;gap:12px}
+ .studio-heading .midnight-title-lockup h1{font-size:clamp(26px,6vw,34px);max-width:none;line-height:1.18}
+ .studio-heading .midnight-tagline{font-size:19px;line-height:1.5}
+ .studio-heading .surprise{font-size:14px;margin:0;min-height:44px;padding:10px 14px}
+ .featured-art{grid-template-columns:1fr;min-height:0;max-height:none}
+ .featured-copy{padding:24px}
+ .featured-copy h2{font-size:32px;line-height:1.2;letter-spacing:-.02em}
+ .featured-copy p{font-size:17px;line-height:1.65;max-width:none}
+ .feature-label,.studio-kicker{font-size:13px;line-height:1.5;letter-spacing:.07em}
+ .featurefacts{font-size:14px;line-height:1.5;gap:12px}
+ .featurefacts span:last-child{display:inline}
+ .feature-cta{width:100%;text-align:center;justify-content:center}
+ .featured-image{min-height:240px;aspect-ratio:4/3}
+ .featured-image .artthumb{height:100%;width:100%}
+ .library-heading{flex-wrap:wrap;align-items:flex-start;gap:14px}
+ .library-heading h2{font-size:26px;line-height:1.3}
+ .library-heading h2 span{font:400 14px/1.5 'Segoe UI',Arial,sans-serif;margin-top:6px}
+ .library-heading select{max-width:100%;font-size:16px;min-height:48px;padding:10px}
+ .studio-searchbar .search{padding:12px;min-width:0}
+ .studio-searchbar input{font-size:16px;min-width:0;width:100%}
+ .medium-tabs{gap:22px;overflow-x:auto;max-width:100%;margin-right:0;padding-right:0}
+ .medium-tabs button{font-size:16px;min-height:48px;flex-shrink:0}
+ .artfilters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+ .artfilters select{width:100%;font-size:16px;min-height:48px;padding:10px;max-width:100%}
+ .artfilters select:last-of-type{grid-column:1/-1}
+ .artgrid{gap:22px}
+ .artcardbody{padding:18px}
+ .artmeta,.artmeta span{font-size:14px;line-height:1.5;gap:7px}
+ .arttitle{font-size:24px;line-height:1.3;margin:10px 0;text-align:left;overflow-wrap:anywhere}
+ .artcardbody p{font-size:16px;line-height:1.6;min-height:0;margin:8px 0}
+ .mediumlabel,.artprogressbadge{font-size:13px;line-height:1.4;padding:6px 9px;max-width:none}
+ .artcardfoot{margin-top:16px;padding-top:12px}
+ .artcardfoot button{font-size:16px;min-height:48px;width:100%;justify-content:space-between}
+ .resume-strip{flex-wrap:wrap;padding:16px}
+ .resume-strip strong{font-size:17px}.resume-status{font-size:14px}
+ .mobilebar,.studio-mobile{height:auto;min-height:76px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:4px}
+ .mobilebar button{font-size:14px;line-height:1.4;min-height:52px;padding:6px 2px;flex:1;min-width:0}
+ .studio-mobile button.active{color:var(--mp-gold);background:var(--checked-surface);border-radius:8px}
+ .studiofooter>span:not(.brand){font-size:17px}.studiofooter small{font-size:13px;line-height:1.6}
+ dialog,.lesson-dialog{width:calc(100% - 16px);max-width:calc(100% - 16px);max-height:calc(100dvh - 24px);padding:18px;overflow:auto}
+ .lesson-dialog .dialoghead h2{font-size:24px;line-height:1.3;overflow-wrap:anywhere}
+ .dialoghead{gap:12px;align-items:flex-start}.dialoghead .iconbtn{flex-shrink:0}
+ .lesson-tabs{gap:18px;overflow-x:auto;max-width:100%}.lesson-tabs button{font-size:16px;min-height:48px;flex-shrink:0}
+ .lesson-intro p,.current-step>p{font-size:18px;line-height:1.7}
+ .lesson-intro h3,.current-step h3{font-size:28px;line-height:1.25}
+ .lesson-pills span,.step-eyebrow,.step-check small,.lesson-note,.lesson-bottom-note,.finish-care,.finish-care p{font-size:14px;line-height:1.65}
+ .step-check label{font-size:17px;line-height:1.5}
+ .step-outline>button{min-width:44px;min-height:48px}.step-outline>button>span{font-size:16px;width:38px;height:38px}
+ .step-controls{flex-wrap:wrap}.step-controls .btn{flex:1 1 120px}
+ .materials-page{padding:16px 0}.large-materials label{font-size:19px;padding:16px 12px;gap:14px;overflow-wrap:anywhere}
+ .visual-step-toolbar,.visual-step figcaption,.zoom-hint{font-size:14px;line-height:1.5}
+ input,textarea,select,.field{font-size:16px}
+ .boardname{font-size:18px}.boardmeta,.pinsub{font-size:14px}
+ .titlebar,.actions{flex-wrap:wrap}.titlebar .actions{max-width:none}
+}
+@media(max-width:600px){
+ .artgrid,.boards{grid-template-columns:minmax(0,1fr)}
+ .midnight-title-lockup>img{display:none}
+ .studio-heading .midnight-title-lockup h1{font-size:30px}
+ .featured-copy{padding:20px}
+ .topright{margin-left:0}.topright .btn{font-size:14px;padding:10px}
+ .studio-topbar .mobilebrand{margin-right:0}
+ .boardcover{height:180px}.boardcover img{height:180px}.boardcover .mini img{height:88px}
+}
+/* Inherit readable theme colors instead of legacy pale purple labels. */
+html[data-theme] :is(.current-step>p,.lesson-intro p,.step-check label,.step-check small,.lesson-note,.lesson-bottom-note,.step-eyebrow,.visual-step figcaption,.studiofooter small){color:var(--muted)}

@@ -1,0 +1,14 @@
+{
+  "name": "midnight-palette",
+  "version": "2.3.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server/index.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check server/index.mjs && node --check server/provider.mjs && node --check public/canvas-ai.js"
+  }
+}
