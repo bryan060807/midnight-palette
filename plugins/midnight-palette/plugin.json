@@ -1,0 +1,25 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "midnight-palette",
+  "version": "0.1.0",
+  "description": "Dibby helps choose painting and drawing sessions from Midnight Palette and coaches practical techniques.",
+  "author": {
+    "name": "AIBRY"
+  },
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Midnight Palette \u2014 Dibby",
+        "shortDescription": "Pick a canvas. Paint with Dibby",
+        "longDescription": "Choose projects that fit your time, supplies and experience, follow illustrated lessons, and get practical painting and drawing guidance. Connects to the public lesson catalog; does not access private boards or generate paid images.",
+        "developerName": "AIBRY",
+        "category": "Creativity",
+        "defaultPrompt": [
+          "Help me choose something to paint tonight.",
+          "My acrylic dries before I can blend it. Help me fix it.",
+          "Help me practice drawing with the supplies I have."
+        ]
+      }
+    }
+  }
+}
