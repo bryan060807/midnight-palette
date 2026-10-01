@@ -10,7 +10,7 @@
     "com.openai": {
       "interface": {
         "displayName": "Midnight Palette \u2014 Dibby",
-        "shortDescription": "Pick a canvas. Paint with Dibby",
+        "shortDescription": "Pick a canvas with Dibby",
         "longDescription": "Choose projects that fit your time, supplies and experience, follow illustrated lessons, and get practical painting and drawing guidance. Connects to the public lesson catalog; does not access private boards or generate paid images.",
         "developerName": "AIBRY",
         "category": "Creativity",

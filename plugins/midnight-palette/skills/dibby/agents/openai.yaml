@@ -1,4 +1,4 @@
 interface:
   display_name: "Dibby — Midnight Palette"
-  short_description: "Pick a canvas. Paint with Dibby"
+  short_description: "Pick a canvas with Dibby"
   default_prompt: "Help me choose a painting or drawing session that fits my time and supplies."
