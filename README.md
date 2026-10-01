@@ -35,17 +35,17 @@ Working code included:
 - 36 painting and drawing projects with illustrated steps.
 - Pinterest import and image recovery, boards, saved ideas, progress tracking.
 - Dark/light themes, Midnight Palette branding, paintbrush logo and mobile reading layout.
-- Dibby mascot, practice cards, guided idea briefs saved on the current device.
+- Dibby mascot, curated technique cards, live technique coaching, optional progress-photo analysis, feedback, and guided idea briefs saved on the current device.
 - Create canvas: upload a reference image, review a lesson plan, generate a final image and six illustrated stages through the OpenAI backend.
 - Saved generated canvases, add to board, materials checklists, resume/cancel and provider-call limits.
 
 Not implemented:
 
-- Dibby AI chat, live web technique search, video demonstrations and photo critique.
+- Automatic web/video discovery or publication. Curated resource records can be reviewed/imported server-side; see `docs/DIBBY.md`.
 - Text-only idea-to-image generation from Dibby's briefs.
 - AIBRY ID, individual user accounts or per-user data isolation.
 
-Dibby's tips and brief builder are local scripted features, not AI responses. Adding a key enables the existing canvas-generation backend; it does not enable those unfinished features.
+Dibby's curated cards work without a provider key. Live coaching and photo analysis require the existing server-side provider configuration. Adding a key enables both the existing canvas-generation backend and live Dibby requests; it does not put the key in browser code.
 
 The backend is a single shared workspace. APP_PASSWORD protects the entire app, not just generation. This is different from the public library/private AI split discussed for Sites. Do not publish the backend without access protection.
 
@@ -77,4 +77,4 @@ To host only the same features that were on Sites, copy `public/` into a separat
 
 ## Validation
 
-Run `npm test` and `npm run check`. Tests use mocked providers; no paid API calls are made by those tests. This export has not been deployed to your server or tested with your API key. See docs/AI-BACKEND-README.md for the original pipeline documentation.
+Run `npm test` and `npm run check`. Tests use mocked providers; no paid API calls are made by those tests. This export has not been deployed to your server or tested with your API key. See `docs/DIBBY.md` for the coaching API, privacy behavior, migration notes, and review backlog; see docs/AI-BACKEND-README.md for the original canvas pipeline documentation.
