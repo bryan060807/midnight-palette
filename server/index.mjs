@@ -1,4 +1,5 @@
 import http from 'node:http';
+import {createDibbyMCP} from './dibby-mcp.mjs';
 import {readFile,writeFile,mkdir,rename,stat} from 'node:fs/promises';
 import {resolve,join,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -7,9 +8,10 @@ import {Store} from './store.mjs';
 import {AppError,options,validatePlan,imageType,safePinterestURL} from './schema.mjs';
 import {OpenAIProvider,MockProvider} from './provider.mjs';
 const root=resolve(fileURLToPath(new URL('..',import.meta.url)));
-export function configuration(env=process.env){const host=env.HOST||'127.0.0.1',port=Number(env.PORT||3000),origin=env.PUBLIC_ORIGIN||`http://127.0.0.1:${port}`,password=env.APP_PASSWORD||'';if(!['127.0.0.1','::1','localhost'].includes(host)&&password.length<16)throw Error('Non-loopback hosting requires APP_PASSWORD with at least 16 characters.');const provider=env.AI_PROVIDER||'openai';if(!['mock','openai'].includes(provider))throw Error('AI_PROVIDER must be openai or mock.');if(!['low','medium','high'].includes(env.IMAGE_QUALITY||'medium'))throw Error('Invalid IMAGE_QUALITY.');const limit=Number(env.MAX_PROVIDER_CALLS_PER_DAY||40);if(!Number.isInteger(limit)||limit<1)throw Error('Invalid provider-call limit.');return {host,port,origin:new URL(origin).origin,password,dataDir:resolve(env.DATA_DIR||join(root,'data')),publicDir:join(root,'public'),provider,limit,key:env.OPENAI_API_KEY||'',textModel:env.OPENAI_TEXT_MODEL||'gpt-4.1',imageModel:env.OPENAI_IMAGE_MODEL||'gpt-image-1.5',quality:env.IMAGE_QUALITY||'medium'};}
+export function configuration(env=process.env){const host=env.HOST||'127.0.0.1',port=Number(env.PORT||3000),origin=env.PUBLIC_ORIGIN||`http://127.0.0.1:${port}`,password=env.APP_PASSWORD||'';if(!['127.0.0.1','::1','localhost'].includes(host)&&password.length<16)throw Error('Non-loopback hosting requires APP_PASSWORD with at least 16 characters.');const provider=env.AI_PROVIDER||'openai';if(!['mock','openai'].includes(provider))throw Error('AI_PROVIDER must be openai or mock.');if(!['low','medium','high'].includes(env.IMAGE_QUALITY||'medium'))throw Error('Invalid IMAGE_QUALITY.');const limit=Number(env.MAX_PROVIDER_CALLS_PER_DAY||40);if(!Number.isInteger(limit)||limit<1)throw Error('Invalid provider-call limit.');return {host,port,origin:new URL(origin).origin,password,dataDir:resolve(env.DATA_DIR||join(root,'data')),publicDir:join(root,'public'),publicCatalog:env.DIBBY_PUBLIC_CATALOG==='true',provider,limit,key:env.OPENAI_API_KEY||'',textModel:env.OPENAI_TEXT_MODEL||'gpt-4.1',imageModel:env.OPENAI_IMAGE_MODEL||'gpt-image-1.5',quality:env.IMAGE_QUALITY||'medium'};}
 export async function createApplication(config,providerOverride){
  const store=new Store(config.dataDir),provider=providerOverride||(config.provider==='mock'?new MockProvider():new OpenAIProvider(config)),media=join(config.dataDir,'media');await mkdir(media,{recursive:true});
+ const dibby=await createDibbyMCP(config);
  const queue=new Set(),creating=new Set(),sessions=new Map(),attempts=new Map();let busy=false,stopping=false,active=null;
  for(const p of store.list()){if(['planning','rendering','queued-plan','queued-images'].includes(p.status)){p.status='interrupted';p.error='The server stopped during generation. Completed images are saved. Resume may repeat the last provider request and incur another charge.';store.put(p)}}
  const assetPath=(id,name)=>join(media,id,name),assetURL=(id,name)=>`/api/projects/${id}/images/${name}`;
@@ -35,6 +37,8 @@ export async function createApplication(config,providerOverride){
  const loginPage=`<!doctype html><meta name="viewport" content="width=device-width"><title>The Midnight Palette — Sign in</title><style>body{font:18px system-ui;max-width:420px;margin:15vh auto;padding:24px;background:#111819;color:#eee5d3}h1{font:36px Georgia,serif;color:#d9c08b}p{color:#c0b49e}input{background:#1c2526;color:#eee5d3;border:1px solid #595847}input,button{font:inherit;padding:12px;width:100%;box-sizing:border-box;margin:8px 0}button{background:#c6ac76;color:#111819;border:0;border-radius:8px}</style><h1>The Midnight Palette</h1><p>Your new 2am Obsession.</p><p>Enter your app password.</p><form><input type="password" name="password" autocomplete="current-password" required aria-label="App password"><button>Sign in</button></form><p role="alert" id="error"></p><script>document.querySelector('form').onsubmit=async e=>{e.preventDefault();const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:e.target.password.value})});if(r.ok)location.href='/';else document.getElementById('error').textContent='Sign-in failed. Check your password or try later.'}</script>`;
  const server=http.createServer(async(req,res)=>{try{
   if(req.headers.host!==new URL(config.origin).host)throw new AppError('Unrecognized host. Set PUBLIC_ORIGIN to the URL you use.',403);
+  const requestPath=new URL(req.url,config.origin).pathname;
+  if(requestPath==='/mcp'&&config.publicCatalog)return await dibby(req,res);
   if(!['GET','HEAD'].includes(req.method)&&req.headers.origin!==config.origin)throw new AppError('Requests must come from this app.',403);
   if(req.headers['sec-fetch-site']==='cross-site')throw new AppError('Cross-site requests are not allowed.',403);
   const url=new URL(req.url,config.origin),path=url.pathname;
