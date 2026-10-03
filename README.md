@@ -2,7 +2,7 @@
 
 Your new 2am Obsession.
 
-This package combines the published site's mobile layout and Dibby mascot with the earlier Node AI canvas backend and saved-canvas improvements. All artwork, scripts, CSS, tutorial step sheets, server source, and tests are included. No build step, npm dependencies, Sites account, or Sites runtime is required.
+This package combines the published site's mobile layout and Dibby mascot with the Node AI canvas backend, saved canvases, and optional private profiles backed by Fedora PostgreSQL. All artwork, scripts, CSS, tutorial step sheets, server source, and tests are included. No build step, Sites account, or Sites runtime is required.
 
 ## Start on your server
 
@@ -11,11 +11,12 @@ Requires Node.js 24+.
 ```bash
 cd midnight-palette
 cp .env.example .env
+npm install
 # Edit .env locally on your server before starting.
 npm start
 ```
 
-The default address is http://127.0.0.1:3000. There is no `npm install` step.
+The default address is http://127.0.0.1:3000. Local mode remains the default. To enable separate AIBRY ID profiles and Fedora storage, follow [the storage setup guide](docs/STORAGE.md) before setting `MIDNIGHT_STORAGE=postgres`.
 
 Configuration lives in `.env` next to `package.json`, outside `public/`. The supplied template contains no API key. Set `OPENAI_API_KEY` on your server to enable the existing photo-reference tutorial backend; never put it in frontend JavaScript. Restart after changing configuration.
 
@@ -38,16 +39,17 @@ Working code included:
 - Dibby mascot, curated technique cards, live technique coaching, optional progress-photo analysis, feedback, and guided idea briefs saved on the current device.
 - Create canvas: upload a reference image, review a lesson plan, generate a final image and six illustrated stages through the OpenAI backend.
 - Saved generated canvases, add to board, materials checklists, resume/cancel and provider-call limits.
+- Optional separate AIBRY ID profiles for two artists, an editable profile page, Fedora workspace sync, private generated canvases and media, and explicit import of older data.
+- Mobile header actions in a two-column grid, with a final render after all studio components load.
 
 Not implemented:
 
 - Automatic web/video discovery or publication. Curated resource records can be reviewed/imported server-side; see `docs/DIBBY.md`.
 - Text-only idea-to-image generation from Dibby's briefs.
-- AIBRY ID, individual user accounts or per-user data isolation.
 
 Dibby's curated cards work without a provider key. Live coaching and photo analysis require the existing server-side provider configuration. Adding a key enables both the existing canvas-generation backend and live Dibby requests; it does not put the key in browser code.
 
-The backend is a single shared workspace. APP_PASSWORD protects the entire app, not just generation. This is different from the public library/private AI split discussed for Sites. Do not publish the backend without access protection.
+Local mode uses a shared workspace protected by APP_PASSWORD. PostgreSQL mode uses separate AIBRY ID profiles; the existing app password authorizes enrollment of a new profile. Configure access protection before publishing the backend.
 
 ## Running as a service
 
@@ -69,6 +71,7 @@ Alternatively, the included Dockerfile and compose.yaml run the same app. Set `.
 - Generated projects and images are under `data/` (or configured DATA_DIR). Stop both app instances before copying an existing data folder. Back it up before any migration.
 - Boards and builtin lesson progress use browser storage. Export a workspace backup from the old app and import it on the new origin. Browser storage does not automatically move between laptop, phone, localhost and domain names.
 - The server data folder and browser backup are separate. Preserve both.
+- In PostgreSQL mode, profiles, workspaces, sessions, generated canvases and image bytes live in the `midnight_palette` database schema. Back up that database as well as `DATA_DIR`; see [STORAGE.md](docs/STORAGE.md) for migration and recovery details.
 - This ZIP contains code and bundled art only, not personal projects, existing browser boards, a live database, passwords or keys.
 
 ## Exact static Sites version
