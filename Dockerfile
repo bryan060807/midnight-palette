@@ -1,6 +1,7 @@
 FROM node:24-bookworm-slim
 WORKDIR /app
 COPY --chown=node:node package.json ./
+RUN npm install --omit=dev --ignore-scripts
 COPY --chown=node:node server ./server
 COPY --chown=node:node public ./public
 RUN mkdir -p /app/data && chown node:node /app/data

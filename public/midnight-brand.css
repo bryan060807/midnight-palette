@@ -127,3 +127,14 @@ html[data-theme=dark] a:focus-visible,html[data-theme=dark] button:focus-visible
 }
 /* Inherit readable theme colors instead of legacy pale purple labels. */
 html[data-theme] :is(.current-step>p,.lesson-intro p,.step-check label,.step-check small,.lesson-note,.lesson-bottom-note,.step-eyebrow,.visual-step figcaption,.studiofooter small){color:var(--muted)}
+/* Keep every studio action reachable on narrow screens. */
+@media(max-width:800px){
+ .studio-topbar{flex-wrap:wrap}
+ .topright{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;margin-left:0;gap:8px}
+ .topright .saved,.topright .avatar{display:none}
+ .topright #openAIProjects,.topright .pinterest-transfer-button,.topright #themeToggle,.topright [data-action="settings"]{display:flex;align-items:center;justify-content:center;width:100%;min-width:0;min-height:48px;margin:0;white-space:normal}
+ .topright #openAIProjects{order:1}
+ .topright .pinterest-transfer-button{order:2}
+ .topright #themeToggle{order:3}
+ .topright [data-action="settings"]{order:4}
+}
