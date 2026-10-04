@@ -1,7 +1,8 @@
 import {createRequire} from 'node:module';
-import {createPublicKey,verify,randomBytes,createHash} from 'node:crypto';
+import {randomBytes,createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {join} from 'node:path';
+import {verifyAibryIdentity} from './aibry-id.mjs';
 
 const issuer='https://id.aibrylabs.com',clientId='midnight-palette-public-web';
 const digest=value=>createHash('sha256').update(value).digest('hex');
@@ -42,14 +43,7 @@ export async function openStudioStorage(config,root){
  const redirect=(res,url)=>{res.writeHead(302,{Location:url,'Cache-Control':'no-store','Referrer-Policy':'no-referrer'});res.end()};
  const setCookie=(res,name,value,seconds)=>res.setHeader('Set-Cookie',`${name}=${value}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${seconds}`);
  const apiJSON=async(url,options={})=>{const r=await fetch(url,{...options,redirect:'error',signal:AbortSignal.timeout(15000)});if(!r.ok)throw fail('AIBRY ID could not complete sign-in. Please try again.',502);return r.json()};
- async function validateIdentityToken(token,nonce){
-  if(typeof token!=='string'||token.length>16384)throw fail('Invalid AIBRY ID identity token.',401);const parts=token.split('.');if(parts.length!==3)throw fail('Invalid AIBRY ID identity token.',401);
-  const header=JSON.parse(Buffer.from(parts[0],'base64url')),claims=JSON.parse(Buffer.from(parts[1],'base64url'));
-  if(header.alg!=='RS256'||claims.iss!==issuer||!(Array.isArray(claims.aud)?claims.aud.includes(clientId):claims.aud===clientId)||typeof claims.exp!=='number'||claims.exp<=Date.now()/1000||claims.nonce!==nonce||typeof claims.sub!=='string'||!claims.sub)throw fail('AIBRY ID identity verification failed.',401);
-  const jwks=await apiJSON(issuer+'/oauth/jwks');const key=jwks.keys?.find(k=>k.kid===header.kid&&k.kty==='RSA');
-  if(!key||!verify('RSA-SHA256',Buffer.from(parts[0]+'.'+parts[1]),createPublicKey({key,format:'jwk'}),Buffer.from(parts[2],'base64url')))throw fail('AIBRY ID signature verification failed.',401);
-  return claims;
- }
+
  return {
   pool,
   async session(req){const value=cookie(req,'midnight_session');if(!/^[A-Za-z0-9_-]{43}$/.test(value))return null;const s=await row('SELECT owner_sub FROM midnight_palette.sessions WHERE token_hash=$1 AND expires_at>now()',[digest(value)]);return s?.owner_sub||null},
@@ -66,7 +60,7 @@ export async function openStudioStorage(config,root){
     const attempt=await row('DELETE FROM midnight_palette.login_attempts WHERE state_hash=$1 AND expires_at>now() RETURNING *',[digest(state)]);
     if(!attempt||url.searchParams.has('error')||!url.searchParams.get('code'))throw fail('AIBRY ID sign-in was not completed.',401);
     const tokens=await apiJSON(issuer+'/oauth/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'authorization_code',client_id:clientId,redirect_uri:config.origin+'/auth/aibry-id/callback',code:url.searchParams.get('code'),code_verifier:attempt.verifier})});
-    const identity=await validateIdentityToken(tokens.id_token,attempt.nonce);
+    const identity=await verifyAibryIdentity(tokens.id_token,attempt.nonce,()=>apiJSON(issuer+'/oauth/jwks'));
     const info=await apiJSON(issuer+'/oauth/userinfo',{headers:{Authorization:'Bearer '+tokens.access_token}});
     if(info.sub!==identity.sub)throw fail('AIBRY ID identity did not match.',401);
     const db=await pool.connect();try{await db.query('BEGIN');await db.query('SELECT pg_advisory_xact_lock(763030)');

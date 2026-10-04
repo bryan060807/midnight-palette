@@ -9,7 +9,7 @@
 3. Provide `MIDNIGHT_DATABASE_URL` through the app's protected server environment, using the Fedora PostgreSQL connection already reachable from the app host. The database role must be allowed to create the `midnight_palette` schema and its tables. Keep the database on the existing private network; do not publish port 5432.
 4. Alternatively, set `MIDNIGHT_DATABASE_ENV_FILE` to a protected file containing `DATABASE_URL`. The existing Windows installation defaults to the sibling `canvas-ritual/.env`. `MIDNIGHT_PG_PACKAGE_FILE` optionally points to that sibling's `package.json` to reuse its installed driver; normal app-local `pg` installation is preferred. No credential values belong in Git, frontend code or logs.
 5. Register the exact public AIBRY ID client described below on Fedora. Confirm the issuer's authorization, token, userinfo and JWKS routes work before activation.
-6. Set `MIDNIGHT_STORAGE=postgres` and restart the app through its normal service manager. Startup creates the dedicated schema and copies older canvases. A database failure stops startup rather than silently falling back to an empty local studio.
+6. Set `MIDNIGHT_STORAGE=postgres`, or copy `studio-settings.example.json` to the server-only `studio-settings.json` and set its storage value to `postgres`, then restart the app through its normal service manager. Startup creates the dedicated schema and copies older canvases. A database failure stops startup rather than silently falling back to an empty local studio.
 
 Required AIBRY ID client:
 
@@ -22,7 +22,9 @@ Required AIBRY ID client:
 | Redirect URI | `https://midnight-palette.aibrylabs.com/auth/aibry-id/callback` |
 | Scopes | `openid profile email` |
 
-`deploy/register-midnight-client.mjs` registers only this client against the existing AIBRY-Auth schema. It reads the Auth service's protected database configuration on Fedora, uses that project's installed PostgreSQL driver, and refuses an existing client with incompatible security settings. Review its fixed project paths against the host installation. `midnight-palette-setup.service` is an optional one-shot user unit for running it through an approved service workflow; it has no enable/start side effect merely by being present in this repo. Registration does not rebuild or restart AIBRY ID. Use the Admin bridge's allowed service operations when deploying through Garage Admin.
+`deploy/register-midnight-client.mjs` registers only this client against the existing AIBRY-Auth schema. It reads the Auth service's protected database configuration on Fedora, uses that project's installed PostgreSQL driver, and refuses an existing client with incompatible security settings. Review its fixed project paths against the host installation. `midnight-palette-setup.service` is an optional one-shot user unit for running it through an approved service workflow; it has no enable/start side effect merely by being present in this repo. Registration does not rebuild or restart AIBRY ID. Restart `aibry-auth.service` after registration: the current identity provider loads its registered-client list at startup. Use the Admin bridge's allowed service operations when deploying through Garage Admin.
+
+The settings JSON accepts only the non-secret storage mode. Environment `MIDNIGHT_STORAGE` overrides it. Keep credentials in protected server configuration; the settings file is ignored by Git and is never served from `public/`. Invalid settings stop startup. To roll back through this file, set storage to `local` and restart.
 
 ## First sign-in and migration
 
