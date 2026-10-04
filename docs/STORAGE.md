@@ -22,7 +22,7 @@ Required AIBRY ID client:
 | Redirect URI | `https://midnight-palette.aibrylabs.com/auth/aibry-id/callback` |
 | Scopes | `openid profile email` |
 
-`deploy/fedora/register-midnight-client.mjs` registers only this client against the existing AIBRY-Auth schema. It reads the Auth service's protected database configuration on Fedora, uses that project's installed PostgreSQL driver, and refuses an existing client with incompatible security settings. Review its fixed project paths against the host installation. `midnight-palette-setup.service` is an optional one-shot user unit for running it through an approved service workflow; it has no enable/start side effect merely by being present in this repo. Registration does not rebuild or restart AIBRY ID. Use the Admin bridge's allowed service operations when deploying through Garage Admin.
+`deploy/register-midnight-client.mjs` registers only this client against the existing AIBRY-Auth schema. It reads the Auth service's protected database configuration on Fedora, uses that project's installed PostgreSQL driver, and refuses an existing client with incompatible security settings. Review its fixed project paths against the host installation. `midnight-palette-setup.service` is an optional one-shot user unit for running it through an approved service workflow; it has no enable/start side effect merely by being present in this repo. Registration does not rebuild or restart AIBRY ID. Use the Admin bridge's allowed service operations when deploying through Garage Admin.
 
 ## First sign-in and migration
 

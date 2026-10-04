@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env server/index.mjs",
     "test": "node --test test/*.test.mjs",
-    "check": "node --check server/index.mjs && node --check server/provider.mjs && node --check public/canvas-ai.js && node --check server/studio-storage.mjs && node --check public/storage-boot.js && node --check public/profile.js && node --check deploy/fedora/register-midnight-client.mjs"
+    "check": "node --check server/index.mjs && node --check server/provider.mjs && node --check public/canvas-ai.js && node --check server/studio-storage.mjs && node --check public/storage-boot.js && node --check public/profile.js && node --check deploy/register-midnight-client.mjs"
   },
   "dependencies": {
     "pg": "8.23.0"
