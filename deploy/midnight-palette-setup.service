@@ -1,0 +1,11 @@
+[Unit]
+Description=Register the exact Midnight Palette AIBRY ID client
+After=aibry-auth.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/aibry/projects/AIBRY-Auth
+ExecStart=/usr/bin/env node /home/aibry/projects/midnight-palette/deploy/register-midnight-client.mjs
+TimeoutStartSec=45
+NoNewPrivileges=true
+UMask=0077
