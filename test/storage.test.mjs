@@ -20,7 +20,10 @@ test('private HTTP routes isolate profiles, workspaces, canvases, media and expo
  const call=(path,who='',options={})=>fetch(url+path,{...options,headers:{origin:config.origin,...(who?{cookie:'test='+who}:{}),'Content-Type':'application/json',...options.headers}});
  try{
   assert.equal((await call('/api/profile')).status,401);
-  assert.equal((await call('/api/profile','alice')).status,200);
+  const profileResponse=await call('/api/profile','alice');assert.equal(profileResponse.status,200);
+  assert.equal(profileResponse.headers.get('x-frame-options'),'DENY');
+  assert.match(profileResponse.headers.get('content-security-policy'),/frame-ancestors 'none'/);
+  for(const invalid of ['null','[]','42','"text"'])assert.equal((await call('/api/profile','alice',{method:'PUT',body:invalid})).status,400);
   assert.equal((await (await call('/api/projects','bob')).json()).projects.length,0);
   for(const suffix of ['', '/images/reference','/export','/progress'])assert.equal((await call('/api/projects/'+projects[0].id+suffix,'bob',suffix==='/progress'?{method:'POST',body:'{"completedSteps":[]}'}:{})).status,404);
   const body={boards:[],pins:[],artProgress:{lesson:{done:[1]}}};
@@ -36,7 +39,7 @@ async function startBoot(owner,remote,initial={}){
  class Storage{constructor(){this.values=new Map(Object.entries(initial))}getItem(k){return this.values.get(k)??null}setItem(k,v){this.values.set(k,String(v))}removeItem(k){this.values.delete(k)}}
  const localStorage=new Storage(),calls=[];
  const context={Storage,localStorage,window:{addEventListener(){}},document:{documentElement:{dataset:{}},getElementById:()=>({innerHTML:'',textContent:''}),querySelectorAll:()=>[],createElement:()=>({}),body:{append(e){e.onload()}},addEventListener(){}},
-  fetch:async(path,options)=>{calls.push({path,options});return{ok:true,status:200,json:async()=>path==='/api/profile'?{owner,profile:{displayName:owner}}:options?.method==='PUT'?{version:remote.version+1}:remote}},setTimeout:()=>1,clearTimeout(){},Blob,URL,location:{reload(){}},installStudioProfile(){},render(){},dialog:{open:false},app:{querySelector:()=>true}};
+  fetch:async(path,options)=>{calls.push({path,options});return{ok:true,status:200,json:async()=>path==='/api/profile'?{owner,profile:{displayName:owner}}:options?.method==='PUT'?{version:remote.version+1}:remote}},setTimeout:()=>1,clearTimeout(){},AbortController,Blob,URL,location:{reload(){}},installStudioProfile(){},render(){},dialog:{open:false},app:{querySelector:()=>true}};
  vm.createContext(context);await vm.runInContext(boot,context);return{context,localStorage,calls};
 }
 test('browser bootstrap separates legacy data and each account before studio scripts load',async()=>{
@@ -90,4 +93,42 @@ test('a failed save preserves a dirty device draft and can retry without advanci
  assert.equal(await result.context.window.MidnightStorage.flush(),true);
  assert.equal(JSON.parse(result.calls.find(x=>x.options?.method==='PUT').options.body).version,3);
  assert.deepEqual(JSON.parse(result.localStorage.values.get('midnight:alice:sync')),{dirty:false,version:4});
+});
+
+test('invalid storage settings fail closed instead of silently disabling private profiles',()=>{
+ assert.throws(()=>configuration({MIDNIGHT_STORAGE:'postgre'}),/MIDNIGHT_STORAGE/);
+});
+test('loading the remote workspace replaces stale device preferences',async()=>{
+ const result=await startBoot('alice',{version:2,body:{boards:[],pins:[],studioPreferences:{theme:'light',ideas:[]}}},{'midnight:alice:pinwell-theme':'dark','midnight:alice:midnight-dibby-ideas':'["stale"]'});
+ assert.equal(result.localStorage.getItem('pinwell-theme'),'light');
+ assert.equal(result.localStorage.getItem('midnight-dibby-ideas'),'[]');
+});
+test('a timed out save preserves the draft and allows a later retry',async()=>{
+ const result=await startBoot('alice',{version:3,body:{boards:[],pins:[]}});
+ result.context.fetch=async()=>{throw Object.assign(Error('aborted'),{name:'AbortError'})};
+ result.localStorage.setItem('pinwell-v1','{"boards":[{"id":"edited"}],"pins":[]}');
+ assert.equal(await result.context.window.MidnightStorage.flush(),false);
+ assert.match(result.context.window.MidnightStorage.status,/timed out/);
+ assert.equal(JSON.parse(result.localStorage.values.get('midnight:alice:sync')).dirty,true);
+});
+
+test('profile backup exports the importable workspace format',async()=>{
+ const result=await startBoot('alice',{version:1,body:{boards:[],pins:[],artSaved:['lesson']}});
+ let exported;
+ result.context.URL={createObjectURL(blob){exported=blob;return 'blob:test'},revokeObjectURL(){}};
+ result.context.document.createElement=()=>({click(){}});
+ result.context.window.MidnightStorage.download();
+ const backup=JSON.parse(await exported.text());
+ assert.equal(backup.format,'pinwell-v1');
+ assert.deepEqual(backup.artSaved,['lesson']);
+});
+
+test('resolving a conflict with the saved studio also restores its theme and ideas',async()=>{
+ const result=await startBoot('alice',{version:4,body:{boards:[],pins:[],studioPreferences:{theme:'light',ideas:['saved']}}},{'midnight:alice:pinwell-v1':'{"boards":[],"pins":[]}','midnight:alice:sync':'{"dirty":true,"version":3}','midnight:alice:pinwell-theme':'dark'});
+ result.context.URL={createObjectURL(){return 'blob:test'},revokeObjectURL(){}};
+ result.context.document.createElement=()=>({click(){}});
+ await result.context.window.MidnightStorage.resolve(false);
+ assert.equal(result.localStorage.getItem('pinwell-theme'),'light');
+ assert.deepEqual(JSON.parse(result.localStorage.getItem('midnight-dibby-ideas')),['saved']);
+ assert.equal(result.localStorage.values.has('midnight:alice:sync'),false);
 });

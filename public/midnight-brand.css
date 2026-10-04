@@ -138,3 +138,33 @@ html[data-theme] :is(.current-step>p,.lesson-intro p,.step-check label,.step-che
  .topright #themeToggle{order:3}
  .topright [data-action="settings"]{order:4}
 }
+
+/* Compact phone layout while keeping every action and 44px touch targets. */
+@media(max-width:800px){
+ .topbar,.studio-topbar{position:relative;padding:10px 12px;gap:8px}
+ .topright{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+ .topright #openAIProjects,.topright .pinterest-transfer-button{grid-column:span 3}
+ .topright #themeToggle,.topright [data-action="settings"],.topright #topStudioSettings,.topright #openProfile{grid-column:span 2;min-height:44px}
+ .topright #topStudioSettings{order:4;width:100%;display:flex;justify-content:center;align-items:center}
+ .topright .btn{min-height:44px;padding:8px;font-size:14px}
+ .studio-content,.content{padding-top:16px}
+ .studio-heading{margin-bottom:16px;padding-bottom:16px;gap:10px}
+ .studio-heading .midnight-title-lockup h1{font-size:clamp(24px,6vw,30px)}
+ .studio-heading .midnight-tagline{font-size:17px}
+ .featured-copy{padding:18px}.featured-copy h2{font-size:28px;margin:12px 0}
+ .featured-copy p{font-size:16px;line-height:1.5}
+ .featured-image{min-height:180px;max-height:260px}
+ .artgrid{gap:16px}.artcardbody{padding:14px}.arttitle{font-size:22px}
+ .artmeta{white-space:normal;flex-wrap:wrap}
+ .mobilebar,.studio-mobile{min-height:64px;padding-top:4px;padding-bottom:calc(4px + env(safe-area-inset-bottom))}
+ .mobilebar button{font-size:12px;min-height:48px}
+ dialog,.lesson-dialog{padding:14px;max-height:calc(100dvh - 16px);overscroll-behavior:contain;overflow-wrap:anywhere}
+ .dialoghead #closeDialog{min-width:44px;min-height:44px;flex-shrink:0}
+ .dialogactions{flex-wrap:wrap;gap:8px}.dialogactions .btn{min-height:44px}
+ .ai-body{padding:0 4px 14px}.ai-body input,.ai-body select,.ai-body textarea{min-width:0;max-width:100%;font-size:16px}
+ .profile-form{gap:12px}.profile-actions{gap:8px;margin:12px 0}
+ .studio-content>*,.content>*,.lesson-overview>*,.step-layout>*{min-width:0}
+ .bulk{max-width:calc(100vw - 24px);flex-wrap:wrap;bottom:calc(80px + env(safe-area-inset-bottom))}
+ #toast{max-width:calc(100vw - 24px);box-sizing:border-box;bottom:calc(84px + env(safe-area-inset-bottom));white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
